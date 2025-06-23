@@ -1,4 +1,4 @@
-# 🔋 Мониторинг батарейки RTC для ESPHome
+# 🔋 RTC Battery Monitoring for ESPHome
 
 [![ESPHome Version](https://img.shields.io/badge/ESPHome-2025.6.0+-blue)](https://esphome.io/)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
