@@ -24,7 +24,7 @@
 sensor:
   - platform: adc
     pin: A0
-    name: "Напряжение батарейки RTC"
+    name: "RTC battery voltage"
     update_interval: 60s
     filters:
       - multiply: 1.4545  # Коэффициент для 100k+220k
