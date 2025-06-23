@@ -3,7 +3,7 @@
 [![ESPHome Version](https://img.shields.io/badge/ESPHome-2025.6.0+-blue)](https://esphome.io/)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-Проект для мониторинга напряжения батарейки CR2032 в модулях DS1307 с оповещением в Telegram.
+Мониторинг напряжения батарейки в DS1307 с оповещением в Telegram.
 
 ## 📸 Схема подключения
 ![Circuit](extras/circuit.png)
