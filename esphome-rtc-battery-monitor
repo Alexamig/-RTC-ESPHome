@@ -1,6 +1,4 @@
 # 🔋 Мониторинг батарейки RTC для ESPHome
-
-**Автор**: Alexandr ([@alexamig](https://github.com/alexamig))  
 **Версия**: 1.6  
 **ESPHome**: 2025.6.0+  
 **Дата**: 23.06.2025    
@@ -19,33 +17,50 @@
                     |
                    GND
 
-#📜 Код (rtc_battery_monitor.yaml)
-# Основной сенсор
+--------------------------------------------------------------------------------------
+#📜 Основной сенсор
 sensor:
   - platform: adc
     pin: A0
     name: "RTC battery voltage"
     update_interval: 60s
     filters:
-      - multiply: 1.4545  # Коэффициент для 100k+220k
+      - multiply: 1.4545
       - sliding_window_moving_average:
           window_size: 5
           send_every: 3
     accuracy_decimals: 2
     unit_of_measurement: "V"
-
-    # Оповещения
     on_value_range:
-      - below: 2.2  # Критический уровень (~3.0V реальных)
+      - below: 2.2  # Критический уровень
         then:
           - lambda: |-
-              char m[100], u[256];
-              snprintf(m, sizeof(m), "Критический разряд батарейки: %.2fV", x);
-              snprintf(u, sizeof(u),
+              char message[100];
+              char url[256];
+              snprintf(message, sizeof(message), "Критический разряд батарейки: %.2fV", x);
+              snprintf(url, sizeof(url),
                 "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s&parse_mode=Markdown",
-                "${telegram_token}", "${chat_id}", m);
-              id(my_http_request).post(u, "");
+                "${telegram_token}",
+                "${chat_id}",
+                message);
+              id(my_http_request).post(url, "");
+              ESP_LOGE("main", "%s", message);
 
+      - below: 2.4  # Предупреждение
+        then:
+          - lambda: |-
+              char message[100];
+              char url[256];
+              snprintf(message, sizeof(message), "Батарейка RTC требует замены: %.2fV", x);
+              snprintf(url, sizeof(url),
+                "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s&parse_mode=Markdown",
+                "${telegram_token}",
+                "${chat_id}",
+                message);
+              id(my_http_request).post(url, "");
+              ESP_LOGW("main", "%s", message);
+
+-----------------------------------------------------------------------------------------------------------
 Подключить схему с резисторами 100k и 220k
 
 Добавьте в ваш secrets.yaml:
